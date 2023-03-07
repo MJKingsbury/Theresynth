@@ -3,5 +3,5 @@ export function limit(num) { //control extremes of depth range
 }
 
 export function calcFrequency(depth) {
-  return (20000 * depth);
+  return 2500 * depth;
 }

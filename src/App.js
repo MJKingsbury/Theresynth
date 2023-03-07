@@ -61,7 +61,7 @@ function App() {
       const lDepth = custom_utils.limit(-results.multiHandLandmarks[iL][9].z);
       const rDepth = custom_utils.limit(-results.multiHandLandmarks[iR][9].z);
       setFrequency(custom_utils.calcFrequency(lDepth));
-      setVolume(rDepth);
+      setVolume(1);
     }
     canvasCtx.restore();
   }
