@@ -4,11 +4,12 @@ import * as drawing_utils from '@mediapipe/drawing_utils';
 import * as hands_utils from '@mediapipe/hands';
 import * as custom_utils from './Utils.js';
 import './App.css';
+import { Synthesizer } from './Synthesizer.js';
 
 function App() {
   const [frequency, setFrequency] = useState(0);
   const [volume, setVolume] = useState(0);
-  const [domHand, setDomHand] = useState("Right");
+  const domHand = "Right";
 
   useEffect(() => {
     const videoElement = document.getElementById('input_video');
@@ -47,9 +48,9 @@ function App() {
     let iR = null;
     if (results.multiHandLandmarks.length === 2) {
       for (const mark of results.multiHandLandmarks) {
-        drawing_utils.drawLandmarks(canvasCtx, mark, {color: '#FFFFFF', lineWidth: 1});
+        drawing_utils.drawLandmarks(canvasCtx, mark, {color: '#FFFFFF', lineWidth: 0.25});
       }
-      iL = results.multiHandedness.findIndex(obj => obj.label === "Right"); //domHand controls Freq
+      iL = results.multiHandedness.findIndex(obj => obj.label === domHand); //domHand controls Freq
       iR = (iL >= 0) ? 1 - iL : null;
     }
     if (iL === null || iR === null) {
@@ -59,7 +60,8 @@ function App() {
     else {
       const lDepth = custom_utils.limit(-results.multiHandLandmarks[iL][9].z);
       const rDepth = custom_utils.limit(-results.multiHandLandmarks[iR][9].z);
-      console.log(lDepth);
+      setFrequency(custom_utils.calcFrequency(lDepth));
+      setVolume(1);
     }
     canvasCtx.restore();
   }
@@ -69,6 +71,7 @@ function App() {
       <div className="container">
         <video id="input_video"></video>
         <canvas id="frame" width="1280px" height="720px"></canvas>
+        <Synthesizer frequency={frequency} volume={volume}></Synthesizer>
       </div>
     </div>
   );
